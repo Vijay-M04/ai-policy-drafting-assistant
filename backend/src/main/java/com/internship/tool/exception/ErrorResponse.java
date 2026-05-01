@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-<<<<<<< HEAD
-import java.util.Map;
-=======
->>>>>>> 181653b (Day 9 — Implemented File Upload & Download with Validation and UUID Storage)
+
+
 
 @Data // Lombok: getters/setters
 @AllArgsConstructor // constructor

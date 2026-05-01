@@ -59,8 +59,7 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-<<<<<<< HEAD
-=======
+
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException ex) {
@@ -74,5 +73,5 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
->>>>>>> 181653b (Day 9 — Implemented File Upload & Download with Validation and UUID Storage)
+
 }
