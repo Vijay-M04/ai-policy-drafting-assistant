@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
+from flask import Response, stream_with_context 
 from services.groq_client import call_groq
 import json
+import time
 
 generate_report_bp = Blueprint("generate_report", __name__)
 
@@ -113,3 +115,57 @@ Input:
             "status": "error",
             "message": str(e)
         }), 500
+    
+
+#  DAY 8 NEW FEATURE: SSE STREAMING ENDPOINT ADDED
+
+
+@generate_report_bp.route("/generate-report-stream", methods=["POST"])
+def generate_report_stream():
+
+    data = request.get_json()
+
+    if not data or "input" not in data:
+        return jsonify({"error": "input is required"}), 400
+
+    user_input = data["input"].strip()
+
+    if not user_input:
+        return jsonify({"error": "input cannot be empty"}), 400
+
+    try:
+        prompt = f"""
+You are a senior AI governance expert.
+
+Generate a clear AI policy explanation in simple sentences.
+Do NOT return JSON. Return plain text only.
+
+Input:
+{user_input}
+"""
+
+        ai_response = call_groq(prompt)
+
+        if not ai_response:
+            return jsonify({"error": "AI response failed"}), 500
+
+        #  STREAM GENERATOR FUNCTION
+        def generate():
+            words = ai_response.split()
+
+            for word in words:
+                yield f"data: {word}\n\n"
+                time.sleep(0.1)  # simulate streaming effect
+
+            yield "data: [DONE]\n\n"
+
+        return Response(
+            stream_with_context(generate()),
+            mimetype="text/event-stream"
+        )
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500    
