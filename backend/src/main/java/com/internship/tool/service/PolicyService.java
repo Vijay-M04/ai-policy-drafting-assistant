@@ -9,9 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.scheduling.annotation.Async; 
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service // Business logic layer
 public class PolicyService {
@@ -21,6 +23,9 @@ public class PolicyService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private AiServiceClient aiServiceClient;
 
     // ✅ CREATE policy (clear cache + send email)
     @CacheEvict(value = {"policies", "policy"}, allEntries = true)
@@ -34,6 +39,8 @@ public class PolicyService {
                 "test@gmail.com", // replace later
                 savedPolicy.getTitle()
         );
+
+        generateAiAsync(savedPolicy.getId(), savedPolicy.getDescription());
 
         return savedPolicy;
     }
@@ -79,6 +86,39 @@ public class PolicyService {
                         policy.getTitle() + " is overdue"
                 );
             }
+        }
+    }
+
+    //  DAY 7 — ASYNC AI METHOD 
+    @Async
+    public void generateAiAsync(Long policyId, String input) {
+        try {
+            var response = aiServiceClient.generateReport(input);
+
+            //  Handle null safely
+            if (response == null || response.get("data") == null) {
+                System.out.println("AI failed or returned null");
+                return;
+            }
+
+            Object data = response.get("data");
+
+            if (data == null) {
+                  System.out.println("AI data missing");
+              return;
+            }
+
+            String aiResult = data.toString();
+
+            Policy policy = policyRepository.findById(policyId).orElse(null);
+
+            if (policy != null) {
+                policy.setAiReport(aiResult);
+                policyRepository.save(policy);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Async error: " + e.getMessage());
         }
     }
 }
