@@ -10,21 +10,24 @@ from routes.analyse_document import analyse_document_bp
 load_dotenv()
 
 
-def create_app():
+def create_app(testing=False):
     app = Flask(__name__)
     CORS(app)
+    
+    app.config["TESTING"] = testing 
 
-    with app.app_context():
-        try:
-            existing_docs = collection.count()
+    if not testing:
+       with app.app_context():
+         try:
+             existing_docs = collection.count()
 
-            if existing_docs == 0:
+             if existing_docs == 0:
                 print("No documents found. Ingesting into ChromaDB...")
                 ingest_documents()
-            else:
-                print(f" ChromaDB already has {existing_docs} documents. Skipping ingestion.")
+             else:
+                 print(f" ChromaDB already has {existing_docs} documents. Skipping ingestion.")
 
-        except Exception as e:
+         except Exception as e:
             print(f" Error checking ChromaDB: {e}")
             print(" Attempting ingestion...")
             ingest_documents()
@@ -33,6 +36,8 @@ def create_app():
     from routes.describe import describe_bp
     from routes.recommend import recommend_bp
     from routes.categorise import categorise_bp
+    from routes.generate_report import generate_report_bp
+    from routes.analyse_document import analyse_document_bp
 
     # Register all routes
     app.register_blueprint(describe_bp, url_prefix="/api")
