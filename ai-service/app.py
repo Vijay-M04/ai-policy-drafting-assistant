@@ -5,6 +5,7 @@ from services.rag_pipeline import ingest_documents, collection
 import os
 from routes.generate_report import generate_report_bp
 from routes.analyse_document import analyse_document_bp
+from routes.batch_process import batch_process_bp
 
 # Load environment variables
 load_dotenv()
@@ -45,6 +46,7 @@ def create_app(testing=False):
     app.register_blueprint(categorise_bp, url_prefix="/api")
     app.register_blueprint(generate_report_bp, url_prefix="/api")
     app.register_blueprint(analyse_document_bp, url_prefix="/api")
+    app.register_blueprint(batch_process_bp, url_prefix="/api")
 
     # Health check
     @app.route("/health", methods=["GET"])
