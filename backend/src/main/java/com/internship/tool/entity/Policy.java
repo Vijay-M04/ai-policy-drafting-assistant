@@ -47,4 +47,8 @@ public class Policy {
 
     @Column
     private LocalDateTime dueDate; // used for overdue check
+
+    // Stores AI-generated report content returned from the Flask AI service (Day 7 integration)
+    @Column(columnDefinition = "TEXT")
+    private String aiReport;
 }

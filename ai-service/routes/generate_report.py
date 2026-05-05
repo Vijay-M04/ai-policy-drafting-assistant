@@ -146,7 +146,7 @@ Input:
 
         ai_response = call_groq(prompt)
 
-        if not ai_response:
+        if not ai_response or "temporarily unavailable" in ai_response:
             return jsonify({"error": "AI response failed"}), 500
 
         #  STREAM GENERATOR FUNCTION
