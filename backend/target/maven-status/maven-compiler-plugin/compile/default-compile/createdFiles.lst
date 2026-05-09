@@ -22,6 +22,7 @@ com\internship\tool\service\FileService.class
 com\internship\tool\config\RedisConfig.class
 com\internship\tool\entity\FileEntity.class
 com\internship\tool\exception\ResourceNotFoundException.class
+com\internship\tool\config\AppConfig.class
 com\internship\tool\controller\FileController.class
 com\internship\tool\repository\UserRepository.class
 com\internship\tool\controller\AuthController.class
