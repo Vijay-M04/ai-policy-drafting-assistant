@@ -23,7 +23,7 @@ public class PolicyController {
     @Autowired
     private PolicyService policyService;
 
-    // ✅ GET ALL
+    // GET ALL
     @Operation(
         summary = "Get All Policies",
         description = "Fetch all policies with pagination support"
@@ -37,7 +37,7 @@ public class PolicyController {
         return ResponseEntity.ok(policies);
     }
 
-    // ✅ GET BY ID
+    // GET BY ID
     @Operation(
         summary = "Get Policy by ID",
         description = "Fetch a policy using its unique ID"
@@ -52,7 +52,7 @@ public class PolicyController {
         return ResponseEntity.ok(policy);
     }
 
-    // ✅ CREATE
+    // CREATE
     @Operation(
         summary = "Create Policy",
         description = "Create a new policy with validation"
@@ -67,7 +67,7 @@ public class PolicyController {
         return new ResponseEntity<>(savedPolicy, HttpStatus.CREATED);
     }
 
-    // ✅ DELETE
+    // DELETE
     @Operation(
         summary = "Delete Policy",
         description = "Delete a policy by its ID"
